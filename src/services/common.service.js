@@ -17,7 +17,7 @@ const createService = (Model) => {
      * @param {string} queryString - The optional query string for filtering, sorting, and pagination.
      * @returns {Promise<Array>} - A promise resolving to an array of retrieved items.
      */
-    async getAll(queryString, populateField) {
+    async getAll(queryString, populateField, selectFields) {
       // Create API features based on query parameters
       const features = new APIFeatures(Model, queryString)
         .search()
@@ -34,14 +34,7 @@ const createService = (Model) => {
       if (populateField) {
         items.docs = await Model.populate(items.docs, {
           path: populateField,
-          select: [
-            "firstName",
-            "lastName",
-            "imageURL",
-            "storeName",
-            "role",
-            "email",
-          ],
+          select: selectFields,
         });
       }
       // items.docs.map(async (item) => {
@@ -79,9 +72,10 @@ const createService = (Model) => {
      * @returns {Promise<Object>} - A promise resolving to the retrieved item.
      * @throws {APIError} - Throws a 404 error if the item is not found.
      */
-    async get(id) {
+    async get(id, populateField, selectFields) {
       // Find item by ID
-      const item = await Model.findById(id);
+      let item = await Model.findById(id);
+
       if (!item) {
         // Throw a 404 error if the item is not found
         throw new APIError({
@@ -90,6 +84,16 @@ const createService = (Model) => {
         });
       }
 
+      if (populateField) {
+        item = await Model.populate(item, {
+          path: populateField,
+          select: selectFields,
+        });
+      }
+
+      if (item.media) {
+        item.media = await MediaUtil.getMediaUrls(item.media);
+      }
       return item;
     },
 

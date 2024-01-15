@@ -22,19 +22,12 @@ postService.reactPost = async (userId, id) => {
   return updatePost;
 };
 
-postService.getPersonalPost = async (userId, populateField) => {
+postService.getPersonalPost = async (userId, populateField, selectFields) => {
   let posts = await Post.find({ author: userId });
   if (populateField) {
     posts = await Post.populate(posts, {
       path: populateField,
-      select: [
-        "firstName",
-        "lastName",
-        "imageURL",
-        "storeName",
-        "role",
-        "email",
-      ],
+      select: selectFields,
     });
   }
   await Promise.all(

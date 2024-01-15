@@ -40,9 +40,13 @@ const factory = {
    * @param {Function} getDocService - A service function responsible for fetching document by ID.
    * @returns {Function} Middleware function for one document retrieval.
    */
-  getById(getDocService) {
+  getById(getDocService, populateFields, selectFields) {
     return catchAsync(async (req, res, next) => {
-      const doc = await getDocService(req.params.id);
+      const doc = await getDocService(
+        req.params.id,
+        populateFields,
+        selectFields
+      );
 
       res.status(200).json({
         status: "success",
@@ -63,7 +67,11 @@ const factory = {
    */
   updateById(updateDocService) {
     return catchAsync(async (req, res, next) => {
-      const updateDoc = await updateDocService(req.params.id, req.body, req.user);
+      const updateDoc = await updateDocService(
+        req.params.id,
+        req.body,
+        req.user
+      );
 
       res.status(200).json({
         status: "success",
@@ -103,9 +111,13 @@ const factory = {
    * @param {Function} getAllDocsService - A service function responsible for retrieving all documents in a collection.
    * @returns {Function} Middleware function for all documents retrieval.
    */
-  getAll(getAllDocsService, populateFields) {
+  getAll(getAllDocsService, populateFields, selectFields) {
     return catchAsync(async (req, res, next) => {
-      const data = await getAllDocsService(req.query, populateFields);
+      const data = await getAllDocsService(
+        req.query,
+        populateFields,
+        selectFields
+      );
       res.status(200).json({
         status: "success",
         data,
