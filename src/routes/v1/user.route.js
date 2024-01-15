@@ -57,6 +57,9 @@ router
   .patch(orderController.userUpdateOrder);
 router.route("/order").get(isAuth, orderController.getUserOrder);
 // Admin interact with users ----
+router
+  .route("/:userId")
+  .get(controller.getOneUser)
 router.use(verifyRoles("admin"));
 router.route("/allOrder").get(orderController.getSellerOrder);
 router
@@ -66,7 +69,6 @@ router
 
 router
   .route("/:userId")
-  .get(controller.getOneUser)
   .patch(controller.updateOneUser)
   .delete(controller.deleteOneUser);
 
