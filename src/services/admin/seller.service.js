@@ -3,7 +3,7 @@ import APIError from "@/utils/APIError.js";
 import APIFeatures from "@/utils/APIFeatures.js";
 import { createRegexFilters } from "@/utils/regexFilters.js";
 import utils from "@/utils/utils.js";
-
+import Notification from "@/models/notification.model.js";
 const sellerServiceAdmin = {
   async searchSeller(queryStr) {
     const searchPipeline = [
@@ -43,6 +43,14 @@ const sellerServiceAdmin = {
     }
 
     seller.sellerStatus = sellerStatus;
+    await Notification.insertNotification(
+      seller.id,
+      "658a477ac7367696117bd135",
+      "Seller Activated",
+      `Congratz Mr/Ms ${seller.lastName} to become ours seller `,
+      "Shop Activated",
+      seller.id
+    );
     // I set validateBeforeSave to false because seller data are synthesized, not real data
     await seller.save({ validateBeforeSave: false });
     return seller;

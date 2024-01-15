@@ -280,14 +280,14 @@ const authService = {
 
       // Insert notification
       await Notification.insertNotification(
-        "6560669998161a8467e3705d",
+        "658a477ac7367696117bd135",
         user.id,
         "Request to become seller",
         `Mr/Ms ${user.lastName} request to become seller`,
         "Activate Shop",
         user.id
       );
-
+        
       return seller;
     },
 
@@ -302,25 +302,6 @@ const authService = {
       return seller;
     },
 
-    async updateSellerStatus(seller, action) {
-      if (action === "approve") {
-        seller.sellerStatus = "active";
-        await seller.save();
-
-        await Notification.insertNotification(
-          seller.id,
-          "6560669998161a8467e3705d",
-          "Seller Activated",
-          `Congratz Mr/Ms ${seller.lastName} to become ours seller `,
-          "Shop Activated",
-          seller.id
-        );
-      } else {
-        seller.sellerStatus = "inactive";
-        seller.role = "user";
-        await seller.save();
-      }
-    },
   },
   forgotPassword: {
     async verifyUserByEmail(data) {
